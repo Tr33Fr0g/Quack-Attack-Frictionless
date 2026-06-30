@@ -7,8 +7,8 @@ let slouchTimer = null;
 let duckIsActive = false;
 
 //config
-const SLOUCH_THRESHOLD = 0.15;
-const SLOUCH_DELAY_MS = 1500;
+const SLOUCH_THRESHOLD = 0.05;
+const SLOUCH_DELAY_MS = 1000;
 const MIN_CONFIDENCE = 0.3;
 
 //ELEMENTS THING
@@ -146,6 +146,50 @@ function checkPosture(currentDistance) {
         }
     }
 }
+
+//RELEASE THE DUCKS!!!
+function triggerDuckAttack() {
+    if (duckIsActive) return;
+    duckIsActive = true;
+
+    statusText.textContent = 'SIT QUACK (back) UP STRAIGHT';
+    statusText.className = 'status-bad';
+
+    
+    const overlay = document.createElement('div');
+    overlay.className = 'slouch-overlay';
+    overlay.id = 'slouch-overlay';
+    document.body.appendChild(overlay);
+
+    const randomDuck = duckImages[Math.floor(Math.random() * duckImages.length)];
+    const duckImg = document.createElement('img');
+    duckImg.src = randomDuck;
+    duckImg.className = 'duck-img';
+    duckImg.style.top = Math.random() * 50 + 10 + '%';
+    duckImg.style.left = Math.random() * 60 + 10 + '%';
+    duckZone.appendChild(duckImg);
+
+    quackSound.currentTime = 0;
+    quackSound.play().catch(() => {});
+}
+
+//CAGE THE DUCKS!!!!
+function removeDuckAttack() {
+    duckIsActive = false;
+
+    statusText.textContent = 'Great posture dont let up!!!';
+    statusText.className = 'status-good';
+
+    const overlay = document.getElementById('slouch-overlay');
+    if (overlay) overlay.remove();
+
+    duckZone.innerHTML = '';
+
+    quackSound.pause();
+    quackSound.currentTime = 0;
+
+}
+
 
 //Calibration for the slouching thingy mabob
 calibrateBtn.addEventListener('click', () => {
