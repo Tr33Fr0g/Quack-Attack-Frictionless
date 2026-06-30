@@ -13,3 +13,12 @@ Tech stack
 Front-end HTML5, CSS3, JavaScript
 ML library: TensorFlow
 Pose detector model: MoveNet
+
+How to run it locally
+1. clone the repository using:
+git clone https://github.com/YOUR_GITHUB_USERNAME/duck-posture-police.git
+2. open the project using VS code (i prefer it)
+3. Install the live server extension
+4. Right clikc the index.html and press open with live server.
+5. Grant camera permissions sit up straight and press the calibrate button.
+
