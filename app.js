@@ -54,12 +54,12 @@ async function setupWebcam() {
 }
 
 //Load the movenet model
-async function loadmodel() {
+async function loadModel() {
     statusText.textContent = 'Loading the ai model.....'
     statusText.className = 'status-loading';
 
     detector = await poseDetection.createDetector(
-        poseDetection.SupportedModels.Movenet,
+        poseDetection.SupportedModels.MoveNet,
         {
             modelType:
             poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING
@@ -123,5 +123,38 @@ ctx.strokeStyle = color;
 ctx.lineWidth = 3;
 ctx.stroke();
 }
+
+//Calibration for the slouching thingy mabob
+calibrateBtn.addEventListener('click', () => {
+    isCalibrated = false;
+
+    const calibrate = async () => {
+        const poses = await detector.estimatePoses(video);
+        if (poses.length > 0) {
+            const keypoints = poses[0].keypoints;
+            const nose = keypoints[0];
+            const leftShoulder = keypoints[5];
+            const rightShoulder = keypoints[6];
+
+            if (nose.score > MIN_CONFIDENCE &&
+                leftShoulder.score > MIN_CONFIDENCE &&
+                rightShoulder.score > MIN_CONFIDENCE) {
+                    const shoulderMidY = (leftShoulder.y + rightShoulder.y) /2;
+
+                    baselineDistance = shoulderMidY - nose.y;
+                    isCalibrated = true;
+                    
+                    statusText.textContent = 'Website is calibrated! Watch your posture!!!'
+
+                    statusText.className = 'status-good';
+                    calibrateBtn = 'Re-Calibrate';
+                } else {
+                    statusText.textContent = 'Could not detect your pose. Please make sure your head and both shoulders are visible on your camera.';
+                    statusText.className = 'status-bad';
+                }
+        }
+    };
+    calibrate();
+});
 
 init();
