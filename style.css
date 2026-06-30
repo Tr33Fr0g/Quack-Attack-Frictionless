@@ -1,0 +1,138 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-boxl;
+}
+
+body {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color:#1a1a30;
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#app {
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #ffee00;
+    margin-bottom: 5px;
+}
+
+#subtitle {
+    font-size: 1rem;
+    color: #aaaaaa;
+    margin-bottom: 20px;
+}
+
+#webcam-container {
+    position: relative;
+    display: inline-block;
+    border: 3px solid #333;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#webcam {
+    width: 640;
+    height: 480;
+    transform: scaleX(-1);
+    display: block;
+}
+
+#overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 640px;
+    height: 480px;
+    transform: scaleX(-1);
+    pointer-events: none;
+}
+
+
+#controls {
+    margin-top: 20px;
+}
+
+#calibrate-btn {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    background-color: #409443;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#calibrate-btn:hover:not(:disabled) {
+    background-color: #409443;
+}
+
+#calibrate-btn:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+}
+
+#status {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.status-good {
+    color: #ffaa00;
+}
+
+.status-bad {
+    color: #ff4444;
+}
+
+.status-loading {
+    color: #ffaa00;
+}
+
+#duck-zone {
+    position: fixed;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.duck-img {
+    position: absolute;
+    width:200px;
+    height: auto;
+    animation: duck-wobble 0.3s infinite alternate;
+}
+
+@keyframes duck-wobble {
+    0% {
+        transform: rotate(-10deg) scale(1);
+    }
+    100% {
+        transform:  rotate(10deg) scale(1.05);
+    }
+}
+
+.slouch-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 0, 0, 0.15);
+    z-index: 999;
+    pointer-events: none;
+}
