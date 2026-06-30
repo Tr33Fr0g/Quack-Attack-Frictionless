@@ -7,7 +7,7 @@ let slouchTimer = null;
 let duckIsActive = false;
 
 //config
-const SLOUCH_THRESHOLD = 0.05;
+const SLOUCH_THRESHOLD = 0.02;
 const SLOUCH_DELAY_MS = 1000;
 const MIN_CONFIDENCE = 0.3;
 
