@@ -84,15 +84,16 @@ async function detectPose() {
 
     if (poses.length > 0) {
         const keypoints = poses[0].keypoints;
-        const nose = keypoint[0];
-        const leftShoulder = keypoint[5];
-        const rightShoulder = keypoint[6];
+        const nose = keypoints[0];
+        const leftShoulder = keypoints[5];
+        const rightShoulder = keypoints[6];
 
         if (nose.score > MIN_CONFIDENCE &&
-            leftShoulder.score > MIN_CONFIDENCE) {
+            leftShoulder.score > MIN_CONFIDENCE &&
+            rightShoulder.score > MIN_CONFIDENCE) {
                 drawKeypoints(nose, leftShoulder, rightShoulder);
 
-                const shoulderMidY = (leftShoulder.y + rightShoulder) / 2;
+                const shoulderMidY = (leftShoulder.y + rightShoulder.y) / 2;
                 const currentDistance = shoulderMidY - nose.y;
 
                 if (isCalibrated) {
@@ -123,6 +124,28 @@ ctx.strokeStyle = color;
 ctx.lineWidth = 3;
 ctx.stroke();
 }
+    //SLOUCH CHECKER 3000 UP AND RUNNING
+function checkPosture(currentDistance) {
+    const deviation = (baselineDistance - currentDistance) / baselineDistance;
+
+    if (deviation > SLOUCH_THRESHOLD) {
+        if (!isSlouching && !slouchTimer) {
+            slouchTimer = setTimeout(() => {
+                isSlouching = true;
+                triggerDuckAttack();
+            }, SLOUCH_DELAY_MS);
+        }
+    } else {
+        if (slouchTimer) {
+            clearTimeout(slouchTimer);
+            slouchTimer = null;
+        }
+        if (isSlouching) {
+            isSlouching = false;
+            removeDuckAttack();
+        }
+    }
+}
 
 //Calibration for the slouching thingy mabob
 calibrateBtn.addEventListener('click', () => {
@@ -147,7 +170,7 @@ calibrateBtn.addEventListener('click', () => {
                     statusText.textContent = 'Website is calibrated! Watch your posture!!!'
 
                     statusText.className = 'status-good';
-                    calibrateBtn = 'Re-Calibrate';
+                    calibrateBtn.textContent = 'Re-Calibrate';
                 } else {
                     statusText.textContent = 'Could not detect your pose. Please make sure your head and both shoulders are visible on your camera.';
                     statusText.className = 'status-bad';
